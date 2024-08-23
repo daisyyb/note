@@ -220,10 +220,17 @@ public class ErdController {
     public String edit(@ModelAttribute ErdDto dto,
                        @RequestParam(value = "image", required = false) MultipartFile image) {
         try {
+            // 새 이미지가 업로드된 경우 처리
             String imageUrl = null;
             if (image != null && !image.isEmpty()) {
-                imageUrl = saveUploadedFile(image);
+                imageUrl = saveUploadedFile(image); // 새 이미지 저장
+            } else {
+                // 새 이미지가 없을 경우 기존 이미지 URL을 유지
+                ErdDto existingDto = erdDao.selectOne(dto.getStockNo());
+                imageUrl = existingDto.getImageUrl();
             }
+
+            // 재고 정보를 업데이트합니다.
             boolean result = erdDao.update(dto, imageUrl);
             if (!result) {
                 return "redirect:/stock/edit?stockNo=" + dto.getStockNo() + "&error=true";
