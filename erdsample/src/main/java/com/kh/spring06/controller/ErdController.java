@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +31,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.spring06.dao.ChangeLogDao;
 import com.kh.spring06.dao.ErdDao;
+import com.kh.spring06.dto.ChangeLogDto;
 import com.kh.spring06.dto.ErdDto;
 
 import jakarta.annotation.PostConstruct;
@@ -40,6 +44,11 @@ public class ErdController {
 
     @Autowired
     private ErdDao erdDao;
+    
+    
+    @Autowired
+    private ChangeLogDao changeLogDao; // ChangeLogDao 추가
+    
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -141,15 +150,28 @@ public class ErdController {
         return "/WEB-INF/views/stock/insertComplete.jsp";
     }
 
-    // 목록(검색) 페이지
+ // 목록(검색) 페이지
     @RequestMapping("/list")
     public String list(Model model,
                        @RequestParam(required = false) String column,
                        @RequestParam(required = false) String keyword) {
         List<ErdDto> list = null;
+        Map<Integer, List<ChangeLogDto>> changeLogsMap = null; // 재고 번호별 변경 로그를 저장할 맵
+        
         try {
             boolean isSearch = column != null && keyword != null;
             list = isSearch ? erdDao.selectList(column, keyword) : erdDao.selectList();
+
+            // 각 재고 번호에 대해 변경 로그를 조회
+            List<Integer> stockNos = list.stream()
+                                         .map(ErdDto::getStockNo)
+                                         .collect(Collectors.toList());
+
+            changeLogsMap = stockNos.stream()
+                                    .collect(Collectors.toMap(
+                                        stockNo -> stockNo,
+                                        stockNo -> changeLogDao.selectChangeLogsByStockNo(stockNo)
+                                    ));
         } catch (Exception e) {
             e.printStackTrace();  // 로그에 에러 기록
             return "redirect:/stock/list?error=true";
@@ -158,8 +180,10 @@ public class ErdController {
         model.addAttribute("column", column);
         model.addAttribute("keyword", keyword);
         model.addAttribute("list", list);
+        model.addAttribute("changeLogsMap", changeLogsMap); // 변경 로그 맵을 모델에 추가
         return "/WEB-INF/views/stock/list.jsp";
     }
+
 
     // 상세 조회 페이지
     @RequestMapping("/detail")

@@ -160,6 +160,8 @@ a:hover {
 					<th>이미지</th>
 					<th>카테고리</th>
 					<th>이름</th>
+					<th>변경 전 수량</th> <!-- 변경 전 수량 추가 -->
+					<th>변경 후 수량</th> <!-- 변경 후 수량 추가 -->
 					<th>수량</th>
 					<th>상세</th>
 					<th>삭제</th>
@@ -174,6 +176,22 @@ a:hover {
 						</td>
 						<td>${item.stockCategory}</td>
 						<td>${item.stockName}</td>
+						<td>
+							<c:choose>
+								<c:when test="${latestChangeLogsMap[item.stockNo] != null}">
+									${latestChangeLogsMap[item.stockNo].oldQuantity}
+								</c:when>
+								<c:otherwise>없음</c:otherwise>
+							</c:choose>
+						</td>
+						<td>
+							<c:choose>
+								<c:when test="${latestChangeLogsMap[item.stockNo] != null}">
+									${latestChangeLogsMap[item.stockNo].newQuantity}
+								</c:when>
+								<c:otherwise>없음</c:otherwise>
+							</c:choose>
+						</td>
 						<td>${item.stockQuantity}</td>
 						<td><a
 							href="${pageContext.request.contextPath}/stock/detail?stockNo=${item.stockNo}">상세보기</a></td>
@@ -192,5 +210,3 @@ a:hover {
 	</div>
 </body>
 </html>
-
-

@@ -16,4 +16,7 @@ public class ErdDto {
     private String imageUrl;  // 새로 추가된 필드
     @DateTimeFormat(pattern = "yyyy-MM-dd") // 날짜 형식 지정
     private Date expirationDate; // 유통기한 추가
+    
+ // ChangeLogDto를 추가하는 필드
+    private ChangeLogDto latestChangeLog;  // 추가된 필드
 }
