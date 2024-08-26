@@ -266,19 +266,28 @@ public class ErdController {
         return "redirect:/stock/detail?stockNo=" + dto.getStockNo();
     }
 
-    // 입고 처리 메서드
     @PostMapping("/increaseQuantity")
     public String increaseQuantity(@RequestParam int stockNo, @RequestParam int amount, RedirectAttributes redirectAttributes) {
         try {
-            ErdDto dto = erdDao.selectOne(stockNo);
-            if (dto == null) {
+            ErdDto existingDto = erdDao.selectOne(stockNo);
+            if (existingDto == null) {
                 redirectAttributes.addFlashAttribute("error", "해당 상품을 찾을 수 없습니다.");
                 return "redirect:/stock/list";
             }
 
-            int updatedQuantity = dto.getStockQuantity() + amount;
-            dto.setStockQuantity(updatedQuantity);
-            erdDao.updateQuantity(dto); // 수량 업데이트
+            // 현재 재고 수량을 저장
+            int oldQuantity = existingDto.getStockQuantity();
+            int newQuantity = oldQuantity + amount;
+            existingDto.setStockQuantity(newQuantity);
+            erdDao.updateQuantity(existingDto); // 수량 업데이트
+
+            // 변경된 필드 정보 및 Old/ New Values 생성
+            String changedFields = String.format("Increased quantity by %d", amount);
+            String oldValues = String.format("Quantity: %d", oldQuantity);
+            String newValues = String.format("Quantity: %d", newQuantity);
+            
+            // 변경 로그를 추가합니다.
+            changeLogDao.insertChangeLog(stockNo, changedFields, oldValues, newValues);
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "입고 처리 중 오류가 발생했습니다.");
@@ -287,24 +296,32 @@ public class ErdController {
         return "redirect:/stock/detail?stockNo=" + stockNo;
     }
 
-    // 출고 처리 메서드
     @PostMapping("/decreaseQuantity")
     public String decreaseQuantity(@RequestParam int stockNo, @RequestParam int amount, RedirectAttributes redirectAttributes) {
         try {
-            ErdDto dto = erdDao.selectOne(stockNo);
-            if (dto == null) {
+            ErdDto existingDto = erdDao.selectOne(stockNo);
+            if (existingDto == null) {
                 redirectAttributes.addFlashAttribute("error", "해당 상품을 찾을 수 없습니다.");
                 return "redirect:/stock/list";
             }
 
-            int updatedQuantity = dto.getStockQuantity() - amount;
-            if (updatedQuantity < 0) {
+            // 현재 재고 수량을 저장
+            int oldQuantity = existingDto.getStockQuantity();
+            int newQuantity = oldQuantity - amount;
+            if (newQuantity < 0) {
                 redirectAttributes.addFlashAttribute("error", "재고 수량이 부족합니다.");
                 return "redirect:/stock/detail?stockNo=" + stockNo;
             }
+            existingDto.setStockQuantity(newQuantity);
+            erdDao.updateQuantity(existingDto); // 수량 업데이트
 
-            dto.setStockQuantity(updatedQuantity);
-            erdDao.updateQuantity(dto); // 수량 업데이트
+            // 변경된 필드 정보 및 Old/ New Values 생성
+            String changedFields = String.format("Decreased quantity by %d", amount);
+            String oldValues = String.format("Quantity: %d", oldQuantity);
+            String newValues = String.format("Quantity: %d", newQuantity);
+            
+            // 변경 로그를 추가합니다.
+            changeLogDao.insertChangeLog(stockNo, changedFields, oldValues, newValues);
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "출고 처리 중 오류가 발생했습니다.");

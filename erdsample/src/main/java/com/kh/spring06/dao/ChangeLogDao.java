@@ -1,11 +1,14 @@
 package com.kh.spring06.dao;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import com.kh.spring06.dto.ChangeLogDto;
-import java.util.List;
-import java.util.Date;
 
 @Repository
 public class ChangeLogDao {
@@ -24,5 +27,11 @@ public class ChangeLogDao {
             dto.setChangedDate(rs.getTimestamp("changedDate"));
             return dto;
         }, stockNo);
+    }
+
+ // ChangeLog 기록 추가 메서드
+    public void insertChangeLog(int stockNo, String changedFields, String oldValues, String newValues) {
+        String sql = "INSERT INTO ChangeLog (stockNo, changedFields, oldValues, newValues, changedDate) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)";
+        jdbcTemplate.update(sql, stockNo, changedFields, oldValues, newValues);
     }
 }
