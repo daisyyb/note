@@ -20,7 +20,7 @@ public class ErdMapper implements RowMapper<ErdDto> {
         // Convert SQL Date to Java Date
         java.sql.Date sqlDate = rs.getDate("expiration_date");
         if (sqlDate != null) {
-            dto.setExpirationDate(new java.util.Date(sqlDate.getTime()));
+            dto.setExpirationDate(sqlDate); // Keep as java.sql.Date
         }
 
         return dto;

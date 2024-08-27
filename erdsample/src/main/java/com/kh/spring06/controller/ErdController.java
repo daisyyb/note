@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -156,22 +157,19 @@ public class ErdController {
                        @RequestParam(required = false) String column,
                        @RequestParam(required = false) String keyword) {
         List<ErdDto> list = null;
-        Map<Integer, List<ChangeLogDto>> changeLogsMap = null; // 재고 번호별 변경 로그를 저장할 맵
+        Map<Integer, ChangeLogDto> latestChangeLogsMap = new HashMap<>(); // 최신 변경 로그를 저장할 맵
         
         try {
             boolean isSearch = column != null && keyword != null;
             list = isSearch ? erdDao.selectList(column, keyword) : erdDao.selectList();
 
-            // 각 재고 번호에 대해 변경 로그를 조회
-            List<Integer> stockNos = list.stream()
-                                         .map(ErdDto::getStockNo)
-                                         .collect(Collectors.toList());
+            // 각 재고 번호에 대해 최신 변경 로그를 조회
+            for (ErdDto stock : list) {
+                List<ChangeLogDto> changeLogs = changeLogDao.selectChangeLogsByStockNo(stock.getStockNo());
+                ChangeLogDto latestChangeLog = changeLogs.isEmpty() ? new ChangeLogDto() : changeLogs.get(0);
+                latestChangeLogsMap.put(stock.getStockNo(), latestChangeLog);
+            }
 
-            changeLogsMap = stockNos.stream()
-                                    .collect(Collectors.toMap(
-                                        stockNo -> stockNo,
-                                        stockNo -> changeLogDao.selectChangeLogsByStockNo(stockNo)
-                                    ));
         } catch (Exception e) {
             e.printStackTrace();  // 로그에 에러 기록
             return "redirect:/stock/list?error=true";
@@ -180,9 +178,11 @@ public class ErdController {
         model.addAttribute("column", column);
         model.addAttribute("keyword", keyword);
         model.addAttribute("list", list);
-        model.addAttribute("changeLogsMap", changeLogsMap); // 변경 로그 맵을 모델에 추가
+        model.addAttribute("latestChangeLogsMap", latestChangeLogsMap); // 최신 변경 로그 맵을 모델에 추가
         return "/WEB-INF/views/stock/list.jsp";
     }
+
+
 
 
     // 상세 조회 페이지

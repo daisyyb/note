@@ -8,6 +8,8 @@ public class ChangeLogDto {
     private int id;
     private int stockNo;
     private String changedFields;
+    private String oldValues; // 추가된 필드
+    private String newValues; // 추가된 필드 에러발생 가능지점 문제시 삭제(2)
     private Timestamp changedDate;
 
     // 기본 생성자

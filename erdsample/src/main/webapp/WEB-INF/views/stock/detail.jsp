@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> <!-- JSTL fmt 라이브러리 추가 -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -130,6 +129,11 @@
             margin-top: 10px;
         }
     </style>
+    <script>
+        function confirmAction(actionType) {
+            return confirm(actionType + " 하시겠습니까? 변동 수량을 잘 확인하세요 ");
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -139,19 +143,19 @@
         <div class="info"><strong>카테고리:</strong> ${dto.stockCategory}</div>
         <div class="info"><strong>이름:</strong> ${dto.stockName}</div>
         <div class="info"><strong>수량:</strong> ${dto.stockQuantity}</div>
-        <div class="info"><strong>등록 일자:</strong> <fmt:formatDate value="${dto.stockDate}" pattern="yyyy-MM-dd HH:mm" /></div>
+        <div class="info"><strong>등록 일자:</strong> <fmt:formatDate value="${dto.stockDate}" pattern="yyyy-MM-dd" /></div>
         <div class="info"><strong>유통 기한:</strong> <fmt:formatDate value="${dto.expirationDate}" pattern="yyyy-MM-dd" /></div> <!-- 유통 기한 추가 -->
 
         <!-- 입고 처리 폼 -->
         <div class="form-container">
-            <form action="${pageContext.request.contextPath}/stock/increaseQuantity" method="post">
+            <form action="${pageContext.request.contextPath}/stock/increaseQuantity" method="post" onsubmit="return confirmAction('입고');">
                 <input type="hidden" name="stockNo" value="${dto.stockNo}" />
                 <input type="number" name="amount" placeholder="입고 수량" min="1" required />
                 <button type="submit">입고</button>
             </form>
 
             <!-- 출고 처리 폼 -->
-            <form action="${pageContext.request.contextPath}/stock/decreaseQuantity" method="post">
+            <form action="${pageContext.request.contextPath}/stock/decreaseQuantity" method="post" onsubmit="return confirmAction('출고');">
                 <input type="hidden" name="stockNo" value="${dto.stockNo}" />
                 <input type="number" name="amount" placeholder="출고 수량" min="1" required />
                 <button type="submit">출고</button>

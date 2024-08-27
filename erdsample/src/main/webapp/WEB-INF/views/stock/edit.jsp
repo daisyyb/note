@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> <!-- JSTL fmt 라이브러리 추가 -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -118,6 +118,11 @@
             });
 
             $('form').submit(function(event) {
+                // 수정 확인 대화상자 표시
+                if (!confirm('정말 수정하시겠습니까? 변동 사항을 잘 확인하세요.')) {
+                    event.preventDefault(); // 사용자가 취소를 클릭하면 폼 제출을 막음
+                }
+
                 // 각 필드가 비어 있으면 기존 값 유지
                 if ($('#stockCategory').val().trim() === '') {
                     $('#stockCategory').val('${fn:escapeXml(dto.stockCategory)}');
@@ -129,7 +134,7 @@
                     $('#stockQuantity').val('${dto.stockQuantity}');
                 }
                 if ($('#expirationDate').val().trim() === '') {
-                    $('#expirationDate').val('${fn:escapeXml(dto.expirationDate)}');
+                    $('#expirationDate').val('${dto.expirationDate}');
                 }
 
                 // 새 이미지가 업로드되지 않은 경우 기존 이미지 URL 전송
@@ -167,18 +172,18 @@
                     현재 유통 기한: 
                     <fmt:formatDate value="${dto.expirationDate}" pattern="yyyy-MM-dd" />
                 </label>
-                <label for="expirationDate">수정할 유통기한을 입력하세요</label>
-                <input type="date" id="expirationDate" name="expirationDate" value="${dto.expirationDate != null ? fn:escapeXml(dto.expirationDate) : ''}" required>
+                <label for="expirationDate">수정할 유통기한을 입력하세요 (선택)</label>
+                <input type="date" id="expirationDate" name="expirationDate" value="${dto.expirationDate != null ? fn:escapeXml(dto.expirationDate) : ''}">
             </div>
 
             <div class="form-group">
-                <label>현재 이미지 (업로드 시 보여질 사진을 미리 확인하세요)</label>
+                <label>현재 이미지(.png 권장) 업로드 사진을 미리 확인하세요</label>
                 <img src="${pageContext.request.contextPath}/stock/uploaded-images?filename=${fn:escapeXml(dto.imageUrl)}"
                      alt="현재 이미지" class="image-preview" id="imagePreview">
             </div>
 
             <div class="form-group">
-                <label for="image">새 이미지 업로드 (선택 사항)</label>
+                <label for="image">새 이미지 업로드 (선택)</label>
                 <input type="file" id="image" name="image" accept="image/*">
             </div>
 
