@@ -28,7 +28,7 @@ form {
     display: flex;
     justify-content: center;
     margin: 20px 0;
-    background-color: #ffffff; /* 폼 배경색을 흰색으로 설정하여 깔끔하게 보이도록 */
+    background-color: #ffffff; /* 폼 배경색을 흰색으로 설정 */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -52,7 +52,7 @@ select, input[type="text"], button {
 
 button {
     background-color: #f8a5b0; /* 버튼의 배경색을 부드러운 핑크색으로 설정 */
-    color: white;
+    color: white; /* 버튼의 텍스트 색상을 흰색으로 설정 */
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -104,25 +104,22 @@ a:hover {
     margin: 20px 0; /* 상하 여백 추가 */
 }
 
-/* 삭제 버튼 스타일 */
-.delete-button {
-    background-color: #f8a5b0; /* 버튼의 배경색을 부드러운 핑크색으로 설정 */
-    color: white;
+/* 재고 등록 버튼 스타일 */
+.button {
+    background-color: #f8a5b0; /* 버튼 배경색 */
+    color: white; /* 버튼 텍스트 색상 */
     border: none;
-    padding: 6px 12px; /* 버튼의 상하 및 좌우 여백 조정 (작게 설정) */
+    padding: 10px 20px;
     border-radius: 5px;
-    font-size: 14px; /* 버튼 텍스트 크기 조정 (작게 설정) */
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    display: inline-block;
+    font-size: 16px;
+    text-decoration: none;
     text-align: center;
-    line-height: 1.5; /* 버튼의 높이와 텍스트 정렬 조정 */
-    width: auto; /* 버튼 너비를 자동으로 조정 */
-    height: auto; /* 버튼 높이를 자동으로 조정 */
+    display: inline-block;
+    transition: background-color 0.3s ease;
 }
 
-.delete-button:hover {
-    background-color: #f48fb1; /* 버튼 호버 시 배경색을 약간 어두운 핑크색으로 설정 */
+.button:hover {
+    background-color: #f48fb1; /* 버튼 호버 시 배경색 */
 }
 
 /* 상품 이미지 스타일 */
@@ -215,5 +212,10 @@ a:hover {
             </c:forEach>
         </tbody>
     </table>
+
+    <!-- 재고 등록 버튼 추가 -->
+    <div class="button-container">
+        <a href="${pageContext.request.contextPath}/stock/insert" class="button">재고 등록</a>
+    </div>
 </body>
 </html>
