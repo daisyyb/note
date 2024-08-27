@@ -122,7 +122,12 @@ a:hover {
     background-color: #f48fb1; /* 버튼 호버 시 배경색 */
 }
 
-/* 상품 이미지 스타일 */
+/* 상품 이미지와 레이블 스타일 */
+.product-container {
+    position: relative; /* 이미지와 텍스트를 겹치게 배치할 수 있게 함 */
+    display: inline-block; /* 이미지와 텍스트를 수평으로 정렬 */
+}
+
 .product-image {
     max-width: 100px; /* 이미지 최대 너비 설정 */
     max-height: 120px; /* 이미지 최대 높이 설정 */
@@ -130,18 +135,17 @@ a:hover {
     border-radius: 5px; /* 이미지의 모서리를 둥글게 */
 }
 
-/* 변동 정보 스타일 */
-.change-info {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* 수평 정렬 */
-}
-
-.arrow {
-    color: #f48fb1; /* 화살표 색상 설정 */
-    font-size: 1.2em; /* 화살표 크기 조정 */
-    margin: 0 7px; /* 화살표와 텍스트 사이의 간격 설정 */
-    margin-bottom:5px;
+/* 재고 부족 텍스트 스타일 */
+.low-stock {
+    position: absolute; /* 텍스트를 이미지 위에 겹치게 배치 */
+    top: 5px; /* 이미지의 상단에서 5px 떨어진 위치에 텍스트 배치 */
+    left: 5px; /* 이미지의 좌측에서 5px 떨어진 위치에 텍스트 배치 */
+    background-color: rgba(255, 0, 0, 0.7); /* 빨간색 배경과 투명도 */
+    color: #ffffff; /* 텍스트 색상을 흰색으로 설정 */
+    padding: 5px 10px; /* 텍스트 주위에 패딩 추가 */
+    border-radius: 5px; /* 텍스트 배경의 모서리를 둥글게 */
+    font-weight: bold; /* 텍스트를 두껍게 설정 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 }
 </style>
 </head>
@@ -162,7 +166,12 @@ a:hover {
             <c:forEach var="item" items="${list}">
                 <tr>
                     <td>
-                        <img src="${pageContext.request.contextPath}/stock/uploaded-images?filename=${item.imageUrl}" alt="${item.stockName}" class="product-image">
+                        <div class="product-container">
+                            <img src="${pageContext.request.contextPath}/stock/uploaded-images?filename=${item.imageUrl}" alt="${item.stockName}" class="product-image">
+                            <c:if test="${item.stockQuantity < 10}">
+                                <span class="low-stock">재고 부족</span>
+                            </c:if>
+                        </div>
                     </td>
                     <td>${item.stockCategory}</td>
                     <td>${item.stockName}</td>
