@@ -28,3 +28,4 @@
 
 
 
+![재고등록 (4)](https://github.com/user-attachments/assets/8a04f880-a67f-4796-89ba-4f0a69dc5741)
