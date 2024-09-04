@@ -7,3 +7,7 @@
 
 
 [출퇴근 관리 시스템.webm](https://github.com/user-attachments/assets/5bf433cf-9989-4fb7-918a-c8aaca7a0d55)
+
+
+
+![Uploading 출퇴근 관리 시스템.gif…]()
