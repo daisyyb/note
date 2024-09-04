@@ -19,7 +19,7 @@
 
 
 
-![Uploading 샘플.gif…]()
+![샘플](https://github.com/user-attachments/assets/2f6eb363-595f-432d-94ff-383ee33de330)
 
 
 
