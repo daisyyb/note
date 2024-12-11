@@ -21,12 +21,10 @@ console.log(name); // "철수"
 console.log(age);  // 25
 
 
-2.
-Optional Chaining은 객체나 배열처럼 중첩된 데이터 구조를 안전하게 접근할 수 있도록 도와주는 문법입니다. 중간에 값이 null이거나 undefined인 경우 에러를 던지는 대신 그냥 undefined를 반환해줍니다. 그래서 코드가 더 깔끔하고 에러 없이 작동하게 만드는것이 가능합니다.
+2.Optional Chaining은 객체나 배열처럼 중첩된 데이터 구조를 안전하게 접근할 수 있도록 도와주는 문법입니다. 중간에 값이 null이거나 undefined인 경우 에러를 던지는 대신 그냥 undefined를 반환해줍니다. 그래서 코드가 더 깔끔하고 에러 없이 작동하게 만드는것이 가능합니다.
 
 
-3.
-push('a')
+3.push('a')
 push는 배열의 끝에 'a'를 추가합니다.
 
 배열: ['a']
