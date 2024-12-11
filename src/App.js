@@ -1,6 +1,6 @@
 import React from 'react';
 import Editor from './components/Editor';
-import MarkdownParser from './components/MarkdownParser'; // MarkdownParser 컴포넌트를 임포트합니다.
+import MarkdownParser from './components/MarkdownParser'; 
 
 const App = () => {
   return (
