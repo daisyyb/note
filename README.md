@@ -42,9 +42,33 @@ unshift는 배열의 앞쪽에 'e'를 추가합니다.
 최종 결과:
 배열: ['e']
 
+4.
+Promise는 JavaScript에서 비동기 작업을 처리하기 위한 객체로, 비동기 코드의 흐름을 간단하고 예측 가능하게 만들어줍니다. 예를 들어 서버에서 데이터를 가져오거나, 파일을 읽는 등의 작업에서 일반적으로 사용됩니다.
 
+주의할점 두가지로는 
+첫번째 1. 비동기 작업의 상태 관리
+React에서 Promise는 컴포넌트의 상태를 변경할 때 자주 사용돼. 하지만 비동기 작업이 끝난 시점에 해당 컴포넌트가 이미 언마운트(Unmount)된 경우, 상태를 업데이트하려고 하면 경고가 발생하거나 오류가 날 수 있습니다.
 
+예방 방법:
 
+비동기 작업이 실행되기 전에 컴포넌트가 언마운트 되었는지 확인.
+useEffect에서 cleanup 함수를 사용하거나, 플래그 변수를 이용해 안전하게 처리.
+
+두번째 2. 에러 처리를 꼭 해주기
+Promise에서 에러 처리를 하지 않으면 애플리케이션이 예상치 못한 상태에 빠질 수 있어. React에서 특히 서버 요청이나 파일 읽기 등의 작업은 에러가 발생하기 쉽기 때문에 catch를 사용하거나, async/await와 try/catch를 적절히 사용하는 것이 중요합니다.
+
+예방 방법:
+```
+fetch("https://api.example.com/data")
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("데이터 요청 실패");
+    }
+    return response.json();
+  })
+  .then((data) => console.log(data))
+  .catch((error) => console.error("에러 발생:", error));
+```
 
 ![캡처2](https://github.com/user-attachments/assets/2bd2c66b-48ff-4879-8113-632c3ac05b52)
 
